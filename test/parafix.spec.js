@@ -1,5 +1,5 @@
 var
-  BinFixer = require('../src/binfixer'),
+  ParaFix = require('../src/parafix'),
   expect = require('chai').expect,
   fs = require('fs'),
   rimraf = require('rimraf');
@@ -10,15 +10,15 @@ describe('BinFixer', function() {
       // Arrange
       // Act
       // Assert
-      expect(BinFixer).to.exist;
-      expect(BinFixer).to.be.a('function');
+      expect(ParaFix).to.exist;
+      expect(ParaFix).to.be.a('function');
     });
     describe('proto', function() {
       it('should have a fix function', function () {
         // Arrange
         // Act
         // Assert
-        expect(BinFixer.prototype.fix).to.be.a('function');
+        expect(ParaFix.prototype.fix).to.be.a('function');
       });
     });
     describe('fix', function() {
@@ -34,7 +34,7 @@ describe('BinFixer', function() {
         })
       });
       function create() {
-        return new BinFixer();
+        return new ParaFix();
       }
       it('should not change a file containing none of the magic stuff', function () {
         // Arrange
@@ -51,7 +51,7 @@ describe('BinFixer', function() {
         var after = fs.readFileSync('temp/binfile');
         expect(after.toString()).to.equal(contents);
       });
-      it.only('should update a shell script containing $basedir/node_modules/ to $basedir/../', function () {
+      it('should update a shell script containing $basedir/node_modules/ to $basedir/../', function () {
         // Arrange
         var 
           contents = [
@@ -90,6 +90,35 @@ describe('BinFixer', function() {
         sut.fix('temp');
         // Assert
         var after = fs.readFileSync('temp/binfile').toString();
+        expect(after).to.equal(expected);
+      });
+      it('should update a batch file containing %~dp0\\node_modules\\ to have %~dp0\\..\\', function() {
+        // Arrange
+        var 
+          contents = [
+            '@IF EXIST "%~dp0\\node.exe" (',
+            '  "%~dp0\\node.exe"  "%~dp0\\node_modules\\rimraf\\bin.js" %*',
+            ') ELSE (',
+            '  @SETLOCAL',
+            '  @SET PATHEXT=%PATHEXT:;.JS;=;%',
+            '  node  "%~dp0\\node_modules\\rimraf\\bin.js" %*',
+            ')'
+          ].join('\n'),
+          expected = [
+            '@IF EXIST "%~dp0\\node.exe" (',
+            '  "%~dp0\\node.exe"  "%~dp0\\..\\rimraf\\bin.js" %*',
+            ') ELSE (',
+            '  @SETLOCAL',
+            '  @SET PATHEXT=%PATHEXT:;.JS;=;%',
+            '  node  "%~dp0\\..\\rimraf\\bin.js" %*',
+            ')'
+          ].join('\n'),
+          sut = create();
+        fs.writeFileSync('temp/binfile.cmd', contents);
+        // Act
+        sut.fix('temp');
+        // Assert
+        var after = fs.readFileSync('temp/binfile.cmd').toString();
         expect(after).to.equal(expected);
       });
     });

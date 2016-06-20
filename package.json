@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "mocha test/*.spec.js",
-    "lint": "jshint index.js src"
+    "lint": "jshint index.js src",
+    "pack": "npm pack",
+    "prelocalinstall": "run-s pack",
+    "localinstall": "npm install -g parabot-1.0.0.tgz"
   },
   "author": "Davyd McColl <davydm@gmail.com> (https://github.com/fluffynuts)",
   "license": "BSD-2-Clause",
@@ -22,11 +25,13 @@
     "jslint": "^0.10.1",
     "mocha": "^2.5.3",
     "mocha-yar": "^1.0.7",
+    "npm-run-all": "^2.2.0",
     "run-sequence": "^1.2.1",
     "sinon": "^1.17.4"
   },
   "dependencies": {
     "childprocess-queue": "^1.0.1",
-    "cli": "^0.11.2"
+    "cli": "^0.11.2",
+    "rimraf": "^2.5.2"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "paratest",
+  "version": "1.0.0",
+  "description": "testing the actual results of using parabot",
+  "main": "index.js",
+  "scripts": {
+    "test": "run-s do-echo",
+    "do-echo": "echo if you can see this, then it works!"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "npm-run-all": "^2.2.0"
+  }
+}
