@@ -103,11 +103,11 @@ describe('ParaMerge', function () {
         });
       });
 
-      it('should overwrite the existing folder at the target', function () {
+      it('should not overwrite the existing folder at the target', function () {
         // Arrange
         var
-          expected = 'some contents',
-          unexpected = 'moo, said the cow',
+          unexpected = 'some contents',
+          expected = 'moo, said the cow',
           sut = create();
         ensureFolderExists('temp/src1/node_modules/module_a');
         ensureFolderExists('temp/node_modules');

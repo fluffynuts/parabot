@@ -4,6 +4,7 @@
     path = require('path'),
     fs = require('fs'),
     process = require('process'),
+    utils = require('./utils'),
     Queue = require('childprocess-queue').newQueue;
   function ParaBot(opts) {
     this._options = opts || {};
@@ -11,19 +12,8 @@
   var DEFAULT_CONCURRENT_JOBS = 10;
 
   ParaBot.prototype = {
-    _findPackageFile: function() {
-      var search = ['package.json'];
-      while (search.length < 32) {
-        var searchPath = search.join(path.sep);
-        if (fs.existsSync(searchPath)) {
-          return searchPath;
-        }
-        search = ['..'].concat(search);
-      }
-      return null;
-    },
     _readPackageContents: function() {
-      var packageFile = this._findPackageFile();
+      var packageFile = utils.findUpward('package.json');
       return packageFile ? fs.readFileSync(packageFile) : null;
     },
     _findAllRequiredPackages: function() {
@@ -97,9 +87,16 @@
           opts);
       });
       return new Promise(function(resolve, reject) {
+        var waited = 0;
         setTimeout(function check() {
           var pending = queue.getCurrentProcessCount();
           if (pending) {
+            // if (waited++ > 100) {
+            //   var args = queue.getCurrentProcesses().map(function(p) {
+            //     return p.spawnargs[p.spawnargs.length-1];
+            //   });
+            //   console.log(args);
+            // }
             setTimeout(check, 100);
           } else {
             resolve(folders);

@@ -10,6 +10,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "npm-run-all": "^2.2.0"
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "npm-run-all": "^2.2.0",
+    "sinon": "^1.17.4"
+  },
+  "dependencies": {
+    "angular": "^1.5.7",
+    "angular-router": "0.0.2",
+    "express": "^4.14.0",
+    "typescript": "^1.8.10"
   }
 }

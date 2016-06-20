@@ -110,7 +110,20 @@
     fs.writeFileSync(filePath, newLines.join('\n'));
   }
 
+  function findUpward(search) {
+    search = [search];
+    while (search.length < 32) {
+      var searchPath = search.join(path.sep);
+      if (exists(searchPath)) {
+        return searchPath;
+      }
+      search = ['..'].concat(search);
+    }
+    return null;
+  }
+
   module.exports = {
+    findUpward: findUpward,
     rewriteTextFile: rewriteTextFile,
     readLines: readLines,
     flatten: flatten,

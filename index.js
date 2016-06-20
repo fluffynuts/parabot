@@ -4,6 +4,8 @@
   var
     ParaBot = require('./src/parabot'),
     ParaMerge = require('./src/paramerge'),
+    utils = require('./src/utils'),
+    path = require('path'),
     cli = require('cli').enable('glob'),
     rimraf = require('rimraf');
 
@@ -25,10 +27,12 @@
   }
 
   cli.main(function (ignore, options) {
+    var packageFile = utils.findUpward('package.json');
+    var target = [path.dirname(packageFile), 'node_modules'].join('/');
+    console.log('installing to: ' + target);
     var parabot = new ParaBot(options);
     parabot.install().then(function(sources) {
       var paramerge = new ParaMerge();
-      var target = 'node_modules';  // FIXME: should find this folder
       return paramerge.merge(sources, target);
     }).then(function () {
       console.log('parabot complete!');

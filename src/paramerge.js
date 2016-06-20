@@ -4,7 +4,8 @@
     fs = require('fs'),
     path = require('path'),
     rimraf = require('rimraf'),
-    utils = require('./utils');
+    utils = require('./utils'),
+    exec = require('child_process').execSync;
   
   var ParaMerge = function() {
   };
@@ -12,24 +13,17 @@
     _doAllMoves: function(sources, target) {
       return sources.map(function(src) {
         var tempNodeModules = [src, 'node_modules'].join('/')
-        var folders = fs.readdirSync(tempNodeModules);
+        var folders = fs.readdirSync(tempNodeModules).filter(function(p) {
+          return p !== '.bin';
+        });
         return folders.map(function(f) {
           var copyTo = [target, f].join('/');
           var initial = Promise.resolve({});
-          if (utils.exists(copyTo)) {
-            initial = initial.then(function() {
-              return new Promise(function(resolve, reject) {
-                setTimeout(function () {
-                  utils.rmdir(copyTo).then(function() {
-                    resolve();
-                  });
-                }, 1000);
-              });
-            });
-          }
           var moduleSource = [tempNodeModules, f].join('/');
           initial = initial.then(function() {
-            fs.renameSync(moduleSource, copyTo);
+            if (!utils.exists(copyTo)) {
+              fs.renameSync(moduleSource, copyTo);
+            }
           });
           return initial;
         });
@@ -37,18 +31,32 @@
     },
     _copyBins: function(sources, target) {
       var targetBin = [target, '.bin'].join('/');
+      // this is where I've seen bins put on win32
       sources.forEach(function(src) {
-        var allFiles = fs.readdirSync(src);
+        var allFiles = utils.ls(src);
         allFiles.filter(function(p) {
-          return utils.fileExists([src, p].join('/'));
+          return utils.fileExists(p);
         }).forEach(function(p) {
-          utils.copyFile([src, p].join('/'), [targetBin, p].join('/'));
+          utils.copyFile(p, [targetBin, path.basename(p)].join('/'));
+        })
+      });
+      // and on *nix, they end up where you'd expect, in node_modules/.bin
+      sources.forEach(function(src) {
+        var binFiles = utils.ls([src, 'node_modules', '.bin'].join('/'));
+        binFiles.filter(function(p) {
+          return utils.exists(p);
+        }).forEach(function(p) {
+          utils.ensureFolderExists(targetBin);
+          var cmd = 'cp -P "' + p + '" "' + [targetBin, path.basename(p)].join('/') + '"';
+          // this is a horrible hack to copy the symlink
+          console.log(cmd);
+          exec(cmd);
         })
       });
     },
     _removeTempSources: function(sources) {
       return Promise.all(sources.map(function(s) {
-        return utils.rmdir(s);
+        //return utils.rmdir(s);
       }));
     },
     merge: function(sources, target) {

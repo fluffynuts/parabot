@@ -1,6 +1,6 @@
 {
   "name": "parabot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Parallel install bot-thing for npm",
   "main": "index.js",
   "bin": {
@@ -11,7 +11,7 @@
     "lint": "jshint index.js src",
     "pack": "npm pack",
     "prelocalinstall": "run-s pack",
-    "localinstall": "npm install -g parabot-1.0.0.tgz"
+    "localinstall": "npm install -g parabot-1.0.1.tgz"
   },
   "author": "Davyd McColl <davydm@gmail.com> (https://github.com/fluffynuts)",
   "license": "BSD-2-Clause",
