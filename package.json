@@ -1,0 +1,32 @@
+{
+  "name": "parabot",
+  "version": "1.0.0",
+  "description": "Parallel install bot-thing for npm",
+  "main": "index.js",
+  "bin": {
+    "parabot": "index.js"
+  },
+  "scripts": {
+    "test": "mocha test/*.spec.js",
+    "lint": "jshint index.js src"
+  },
+  "author": "Davyd McColl <davydm@gmail.com> (https://github.com/fluffynuts)",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "gulp-npm-run": "0.0.3",
+    "jshint": "^2.9.2",
+    "jslint": "^0.10.1",
+    "mocha": "^2.5.3",
+    "mocha-yar": "^1.0.7",
+    "run-sequence": "^1.2.1",
+    "sinon": "^1.17.4"
+  },
+  "dependencies": {
+    "childprocess-queue": "^1.0.1",
+    "cli": "^0.11.2"
+  }
+}

@@ -1,0 +1,7 @@
+{
+    "evil":false,
+    "indent":2,
+    "passfail":false,
+    "plusplus":false,
+    "predef": [ "module", "require", "define", "it" ]
+}
