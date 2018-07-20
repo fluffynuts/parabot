@@ -1,7 +1,7 @@
 {
   "name": "parabot",
-  "version": "1.0.1",
-  "description": "Parallel install bot-thing for npm",
+  "version": "1.0.2",
+  "description": "PoC that parallelism could work for npm; however, this is likely to eat your dog",
   "main": "index.js",
   "bin": {
     "parabot": "index.js"
